@@ -36,6 +36,8 @@ public class VerifyPhoneNumber extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private LottieAnimationView lottie_wait_marker;
     private String phoneNumber;
+    private LottieAnimationView jump_blue_point;
+
 
 
     @Override
@@ -97,6 +99,7 @@ public class VerifyPhoneNumber extends AppCompatActivity {
         form_BTN_submit = findViewById(R.id.form_BTN_submit);
         lottie_wait_marker =  findViewById(R.id.lottie_wait_marker);
         mAuth = FirebaseAuth.getInstance();
+        jump_blue_point = findViewById(R.id.jump_blue_point);
     }
 
     private void sendVerfiyPhoneNumber(String number) {

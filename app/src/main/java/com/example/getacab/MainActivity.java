@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity {
     private TextInputLayout form_EDT_phoneNumber;
     private MaterialButton form_BTN_submit;
+    private LottieAnimationView taxi_lottie;
 
 
     @Override
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private void findView() {
         form_EDT_phoneNumber = findViewById(R.id.form_EDT_phoneNumber);
         form_BTN_submit = findViewById(R.id.form_BTN_submit);
-
+        taxi_lottie = findViewById(R.id.taxi_lottie);
     }
 
 

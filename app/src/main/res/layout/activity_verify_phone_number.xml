@@ -68,6 +68,20 @@
             android:visibility="gone"/>
 
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/jump_blue_point"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:scaleType="fitCenter"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/jump_blue_point"
+            app:lottie_speed="1.2"
+            tools:ignore="MissingClass" />
+
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </RelativeLayout>

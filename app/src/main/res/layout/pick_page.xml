@@ -30,8 +30,7 @@
                 android:text="map"
                 android:textColor="@color/yellow"
                 android:textSize="50dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottie_marker"
@@ -112,7 +111,20 @@
                 android:text="break"
                 android:textSize="19dp"
                 app:cornerRadius="60dp"
-                app:icon="@drawable/glass"
+                app:icon="@drawable/coffee_break"
+                app:rippleColor="@color/yellowWhite" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/break_return"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="left"
+                android:layout_marginRight="5dp"
+                android:backgroundTint="@color/yellow"
+                android:text="return"
+                android:textSize="19dp"
+                app:cornerRadius="60dp"
+                app:icon="@drawable/coffee_break"
                 app:rippleColor="@color/yellowWhite" />
 
             <com.google.android.material.button.MaterialButton

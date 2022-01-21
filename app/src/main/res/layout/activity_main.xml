@@ -15,10 +15,10 @@
 
         <TextView
             android:id="@+id/textView"
+            style="@style/shadoweffect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            style="@style/shadoweffect"
             android:text="getAcab"
             android:textColor="@color/yellow"
             android:textSize="50dp"
@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
             android:hint="phone number"
-            app:boxBackgroundColor="@color/white"
             android:textColorHint="@color/yellow"
+            app:boxBackgroundColor="@color/white"
             app:boxStrokeColor="@color/yellow"
             app:errorEnabled="true"
             app:hintTextColor="@color/yellow">
@@ -54,6 +54,19 @@
             android:backgroundTint="@color/yellow"
             android:buttonTint="@color/yellow"
             android:text="Submit" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/taxi_lottie"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="110dp"
+            android:scaleType="fitCenter"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/taxi_lottie"
+            app:lottie_speed="1.2"
+            tools:ignore="MissingClass" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

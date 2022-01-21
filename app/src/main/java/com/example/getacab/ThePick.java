@@ -71,6 +71,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         }
     };
     private MaterialButton break_driver;
+    private MaterialButton break_return;
     private MaterialButton button_cancel_driver;
     private MaterialButton button_search;
     private MaterialButton button_cancel;
@@ -109,6 +110,11 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pick_page);
+        Bundle extras = getIntent().getBundleExtra("Bundle");
+        if (extras != null) {
+            type = extras.getString(TYPE);
+            uID = extras.getString(UID);
+        }
         findViews();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRefPass = database.getReference(ProfileActivity.PASSNEGERS);
@@ -121,11 +127,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             }
         }
 
-        Bundle extras = getIntent().getBundleExtra("Bundle");
-        if (extras != null) {
-            type = extras.getString(TYPE);
-            uID = extras.getString(UID);
-        }
+
 
         fragmentMap = new Fragment_Map();
         fragmentMap.setActivity(this);
@@ -186,8 +188,10 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             }
         };
         fragmentMap.onMPP(mapReady);
+
         button_search.setOnClickListener(v -> {
           //  p.setD(minimumDistance());
+
             p.searchForCab=false;
         });
         button_cancel.setOnClickListener(v -> {
@@ -196,9 +200,16 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         });
         break_driver.setOnClickListener(v -> {
             d.setAvailable(false);
+            break_return.setVisibility(View.VISIBLE);
+            break_driver.setVisibility(View.GONE);
         });
         button_cancel_driver.setOnClickListener(v -> {
             d.setAvailable(true);
+        });
+        break_return.setOnClickListener(v -> {
+            d.setAvailable(true);
+            break_return.setVisibility(View.GONE);
+            break_driver.setVisibility(View.VISIBLE);
         });
 
     }
@@ -236,10 +247,12 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     @SuppressLint("WrongViewCast")
     private void findViews() {
         break_driver = findViewById(R.id.break_driver);
+        break_return = findViewById(R.id.break_return);
         button_cancel_driver = findViewById(R.id.button_cancel_driver);
         button_search = findViewById(R.id.button_search);
         button_cancel = findViewById(R.id.button_cancel);
         lottie_marker = findViewById(R.id.lottie_marker);
+        break_return.setVisibility(View.GONE);
         if (type.equals("driver")) {
             button_search.setVisibility(View.GONE);
             button_cancel.setVisibility(View.GONE);
@@ -266,13 +279,6 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         }
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        //  fragmentMap.getAllowEnterTransitionOverlap();
-//        fragmentMap.getActivity();
-//        int x = 9;
-//    }
 
     @Override
     protected void onStart() {
@@ -281,16 +287,9 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
         requestPermissions();
-//        if (!checkPermissions()) {
-//            requestPermissions();
-//        } else {
-//            //TODO
-//            mService.requestLocationUpdates();
-//        }
 
         bindService(new Intent(this, GPS_Service.class), mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-//        updateUI();
     }
 
     @Override
@@ -299,31 +298,6 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         LocalBroadcastManager.getInstance(this).registerReceiver(fileBroadcastReceiver,
                 new IntentFilter(GPS_Service.ACTION_BROADCAST));
     }
-
-//    private void updateUI() {
-//        startTicker();
-//    }
-
-//    private void startTicker() {
-//        Timer timer = new Timer();
-//        timer.scheduleAtFixedRate(ts = new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(() -> {
-//                    if (counter == 1) {
-//                        fragmentMap.setOnMapCabs(cabs);
-//                        if (type.equals("driver")) {
-//                            fragmentMap.setOnMapPass(pass);
-//                        } else {
-//                            if (p != null) {
-//                                fragmentMap.setOnMap(p.locationNow.getLatitude(), p.locationNow.getLongitude());
-//                            }
-//                        }
-//                    }
-//                });
-//            }
-//        }, 0, 200);
-//    }
 
     @Override
     protected void onStop() {
