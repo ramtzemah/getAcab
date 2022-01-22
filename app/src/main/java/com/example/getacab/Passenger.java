@@ -15,7 +15,7 @@ public class Passenger {
     public boolean searchForCab = true;
     public LocationNow locationNow;
     public String phoneNumber;
-    public Driver D = null;
+    public int dId;
 
     public Passenger() {
     }
@@ -25,6 +25,7 @@ public class Passenger {
         locationNow = new LocationNow();
         this.phoneNumber=phoneNumber;
         myuIdPass = NextuIdPass++;
+        dId = 0;
         // uIdPass=uIdPass+1;
     }
 
@@ -34,6 +35,7 @@ public class Passenger {
         this.searchForCab = p.searchForCab;
         this.myuIdPass = p.myuIdPass;
         this.locationNow = new LocationNow(p.locationNow);
+        this.dId = p.dId;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -95,7 +97,15 @@ public class Passenger {
         this.myuIdPass = Integer.parseInt(myuIdPass);
     }
 
-//    public Driver getD() {
+    public int getdId() {
+        return dId;
+    }
+
+    public void setdId(int dId) {
+        this.dId = dId;
+    }
+
+    //    public Driver getD() {
 //        return D;
 //    }
 //

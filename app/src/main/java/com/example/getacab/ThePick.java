@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -190,13 +191,24 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         fragmentMap.onMPP(mapReady);
 
         button_search.setOnClickListener(v -> {
-          //  p.setD(minimumDistance());
-
-            p.searchForCab=false;
+           p.setdId(minimumDistance());
+            if (p.getdId() != 0) {
+                Driver temp = findDriverById(p.getdId());
+                temp.setAvailable(false);
+                myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
+                p.searchForCab = false;
+            }
+            else{
+                Toast.makeText(this,"sorry, there is no available cab" , Toast.LENGTH_SHORT).show();
+            }
         });
         button_cancel.setOnClickListener(v -> {
-            p.setSearchForCab(true);
-          //  p.setD(null);
+            if (p.getdId() != 0) {
+                Driver temp = findDriverById(p.getdId());
+                temp.setAvailable(true);
+                myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
+                p.setSearchForCab(true);
+            }
         });
         break_driver.setOnClickListener(v -> {
             d.setAvailable(false);
@@ -214,18 +226,30 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
 
     }
 
-    private Driver minimumDistance() {
+    private Driver findDriverById(int getdId) {
+        for (int i = 0; i < cabs.size(); i++) {
+            if (String.valueOf(getdId).equals(cabs.get(i).getMyuIdCab())) {
+                return cabs.get(i);
+            }
+        }
+        return null;
+    }
+
+    private int minimumDistance() {
         HashMap<Double,Driver>distaceForDriver =  new HashMap<Double, Driver>();
         ArrayList<Double>distance = new ArrayList<>();
         for (int i = 0; i < cabs.size(); i++) {
             if(cabs.get(i).isAvailable()==true) {
-                Double dista = meterDistanceBetweenPoints(Float.parseFloat(p.getLocationNow().getLatitude()), Float.parseFloat(p.getLocationNow().getLongitude()), Float.parseFloat(d.getLocationNow().getLatitude()), Float.parseFloat(p.getLocationNow().getLongitude()));
+                Double dista = meterDistanceBetweenPoints(Float.parseFloat(p.getLocationNow().getLatitude()), Float.parseFloat(p.getLocationNow().getLongitude()), Float.parseFloat(cabs.get(i).getLocationNow().getLatitude()), Float.parseFloat(cabs.get(i).getLocationNow().getLongitude()));
                 distance.add(dista);
                 distaceForDriver.put(dista, cabs.get(i));
             }
         }
+        if (distance.get(0) == null) {
+            return 0;
+        }
         Collections.sort(distance);
-        return distaceForDriver.get(distance.get(0));
+        return Integer.parseInt(distaceForDriver.get(distance.get(0)).getMyuIdCab());
     }
 
     private double meterDistanceBetweenPoints(float lat_a, float lng_a, float lat_b, float lng_b) {

@@ -105,7 +105,11 @@ public class Fragment_Map extends Fragment {
             markerOptionscabs.add(new MarkerOptions());
             markerOptionscabs.get(i).position(latLng);
             markerOptionscabs.get(i).title(cabs.get(i).getName());
-            markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.cab));
+            if (cabs.get(i).isAvailable() == true) {
+                markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.cab));
+            }else{
+                markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.catch_taxi));
+            }
             mMap.addMarker(markerOptionscabs.get(i));
 //            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
 //                    latLng,10

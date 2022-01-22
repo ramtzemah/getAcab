@@ -45,28 +45,35 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/passenger"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/form_EDT_name"
-            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
-            android:buttonTint="@color/yellow"
-            android:text="Passenger" />
+            android:orientation="vertical"
+            android:padding="32dp">
 
-        <CheckBox
-            android:id="@+id/driver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/passenger"
-            android:layout_alignStart="@id/passenger"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:buttonTint="@color/yellow"
-            android:text="Driver" />
+            <CheckBox
+                android:id="@+id/passenger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/form_EDT_name"
+
+                android:layout_marginTop="40dp"
+                android:buttonTint="@color/yellow"
+                android:text="Passenger" />
+
+            <CheckBox
+                android:id="@+id/driver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/passenger"
+                android:layout_alignStart="@id/passenger"
+
+                android:layout_marginTop="30dp"
+                android:buttonTint="@color/yellow"
+                android:text="Driver" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/form_BTN_submit"
