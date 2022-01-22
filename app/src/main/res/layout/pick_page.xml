@@ -128,6 +128,19 @@
                 app:rippleColor="@color/yellowWhite" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_pick"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="left"
+                android:layout_marginRight="5dp"
+                android:backgroundTint="@color/yellow"
+                android:text="pick"
+                android:textSize="19dp"
+                app:cornerRadius="60dp"
+                app:icon="@drawable/pick"
+                app:rippleColor="@color/yellowWhite" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_cancel_driver"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"

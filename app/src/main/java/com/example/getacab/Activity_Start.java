@@ -75,11 +75,11 @@ public class Activity_Start extends AppCompatActivity {
                             public void run() {
                                 runOnUiThread(() -> {
                                     counter++;
-                                    if(counter ==2)
+                                    if(counter ==10)
                                         animationDone();
                                 });
                             }
-                        }, 0, 2000);
+                        }, 0, 200);
 
                     }
 

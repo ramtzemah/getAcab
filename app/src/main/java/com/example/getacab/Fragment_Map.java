@@ -101,7 +101,7 @@ public class Fragment_Map extends Fragment {
         mMap.clear();
         ArrayList<MarkerOptions> markerOptionscabs = new ArrayList<>(cabs.size());
         for (int i = 0; i < cabs.size() ; i++) {
-            LatLng latLng = new LatLng(Double.parseDouble(cabs.get(i).locationNow.getLatitude()),Double.parseDouble(cabs.get(i).locationNow.getLongitude()));
+            LatLng latLng = new LatLng(Double.parseDouble(cabs.get(i).getLocationNow().getLatitude()),Double.parseDouble(cabs.get(i).getLocationNow().getLongitude()));
             markerOptionscabs.add(new MarkerOptions());
             markerOptionscabs.get(i).position(latLng);
             markerOptionscabs.get(i).title(cabs.get(i).getName());
@@ -122,7 +122,7 @@ public class Fragment_Map extends Fragment {
 //        mMap.clear();
         ArrayList<MarkerOptions> markerOptionspass = new ArrayList<>(pass.size());
         for (int i = 0; i < pass.size() ; i++) {
-            LatLng latLng = new LatLng(Double.parseDouble(pass.get(i).locationNow.getLatitude()),Double.parseDouble(pass.get(i).locationNow.getLongitude()));
+            LatLng latLng = new LatLng(Double.parseDouble(pass.get(i).getLocationNow().getLatitude()),Double.parseDouble(pass.get(i).getLocationNow().getLongitude()));
             markerOptionspass.add(new MarkerOptions());
             markerOptionspass.get(i).position(latLng);
             markerOptionspass.get(i).title(pass.get(i).getName());

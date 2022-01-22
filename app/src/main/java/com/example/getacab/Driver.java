@@ -10,11 +10,11 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Driver {
     private static int NextuIdCab = 1;
     private int myuIdCab;
-    //private static int uIdCab = 0;
     private String name;
-    LocationNow locationNow;
+    private  LocationNow locationNow;
     private boolean available = true;
-    String phoneNumber;
+    private String phoneNumber;
+    private int pId;
 
     public Driver() {
     }
@@ -24,7 +24,7 @@ public class Driver {
         this.phoneNumber = phoneNumber;
         locationNow = new LocationNow();
         myuIdCab = NextuIdCab++;
-        //uIdCab=uIdCab+1;
+        pId = -1;
     }
 
     public Driver(Driver d) {
@@ -33,6 +33,7 @@ public class Driver {
         this.available = d.available;
         this.myuIdCab = d.myuIdCab;
         this.locationNow = new LocationNow(d.locationNow);
+        this.pId = d.pId;
     }
 
 
@@ -55,7 +56,15 @@ public class Driver {
         myRef.child(phoneNumber).setValue(this);
     }
 
-//    public static int getuIdCab() {
+    public int getpId() {
+        return pId;
+    }
+
+    public void setpId(int pId) {
+        this.pId = pId;
+    }
+
+    //    public static int getuIdCab() {
 //        return uIdCab;
 //    }
 //

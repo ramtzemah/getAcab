@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
 import java.util.TimerTask;
 
 public class ThePick extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -53,9 +54,11 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     private String uID = "";
     private Driver d;
     private Passenger p;
-    //  private MyReceiver myReceiver;
+    //  private MyReceiver myReceivr;
     private GPS_Service mService = null;
     private boolean mBound = false;
+
+
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -73,6 +76,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     };
     private MaterialButton break_driver;
     private MaterialButton break_return;
+    private MaterialButton button_pick;
     private MaterialButton button_cancel_driver;
     private MaterialButton button_search;
     private MaterialButton button_cancel;
@@ -87,14 +91,14 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             if (location != null) {
                 if (type.equals("driver")) {
                     if (d != null) {
-                        d.locationNow.setLatitude(String.valueOf(location.getLatitude()));
-                        d.locationNow.setLongitude(String.valueOf(location.getLongitude()));
+                        d.getLocationNow().setLatitude(String.valueOf(location.getLatitude()));
+                        d.getLocationNow().setLongitude(String.valueOf(location.getLongitude()));
                         myRefCab.child(d.getMyuIdCab()).setValue(d);
                     }
                 } else {
                     if (p != null) {
-                        p.locationNow.setLatitude(String.valueOf(location.getLatitude()));
-                        p.locationNow.setLongitude(String.valueOf(location.getLongitude()));
+                        p.getLocationNow().setLatitude(String.valueOf(location.getLatitude()));
+                        p.getLocationNow().setLongitude(String.valueOf(location.getLongitude()));
                         myRefPass.child(p.getMyuIdPass()).setValue(p);
                     }
                 }
@@ -147,7 +151,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
                 }
                 if (counter == 1) {
                     fragmentMap.setOnMapCabs(cabs);
-                    fragmentMap.setOnMap(p.locationNow.getLatitude(), p.locationNow.getLongitude());
+                    fragmentMap.setOnMap(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
                 }
             }
         };
@@ -179,33 +183,50 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
                 if (type.equals("driver")) {
                     fragmentMap.setOnMapPass(pass);
                     if (d != null)
-                        fragmentMap.myPosition(d.locationNow.getLatitude(), d.locationNow.getLongitude());
+                        fragmentMap.myPosition(d.getLocationNow().getLatitude(), d.getLocationNow().getLongitude());
                 } else {
                     if (p != null) {
-                        fragmentMap.setOnMap(p.locationNow.getLatitude(), p.locationNow.getLongitude());
-                        fragmentMap.myPosition(p.locationNow.getLatitude(), p.locationNow.getLongitude());
+                        fragmentMap.setOnMap(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
+                        fragmentMap.myPosition(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
                     }
                 }
             }
         };
         fragmentMap.onMPP(mapReady);
 
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(ts = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    if(type.equals("driver") && d!=null){
+                        if(d.getpId()!=-1){
+                            button_pick.setVisibility(View.VISIBLE);
+                            break_driver.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        }, 0, 500);
+
         button_search.setOnClickListener(v -> {
            p.setdId(minimumDistance());
-            if (p.getdId() != 0) {
+            if (p.getdId() != -1) {
                 Driver temp = findDriverById(p.getdId());
                 temp.setAvailable(false);
+                temp.setpId(Integer.parseInt(p.getMyuIdPass()));
                 myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
-                p.searchForCab = false;
+                p.setSearchForCab(false);
             }
             else{
                 Toast.makeText(this,"sorry, there is no available cab" , Toast.LENGTH_SHORT).show();
             }
         });
         button_cancel.setOnClickListener(v -> {
-            if (p.getdId() != 0) {
+            if (p.getdId() != -1) {
                 Driver temp = findDriverById(p.getdId());
                 temp.setAvailable(true);
+                temp.setpId(-1);
                 myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
                 p.setSearchForCab(true);
             }
@@ -216,14 +237,36 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             break_driver.setVisibility(View.GONE);
         });
         button_cancel_driver.setOnClickListener(v -> {
-            d.setAvailable(true);
+            if(p.getdId()!=-1) {
+                Passenger temp = findPassengerById(d.getpId());
+                temp.setSearchForCab(true);
+                temp.setdId(-1);
+                myRefPass.child(p.getMyuIdPass()).setValue(temp);
+                d.setAvailable(true);
+                button_pick.setVisibility(View.GONE);
+                break_driver.setVisibility(View.VISIBLE);
+            }
+
         });
         break_return.setOnClickListener(v -> {
             d.setAvailable(true);
             break_return.setVisibility(View.GONE);
             break_driver.setVisibility(View.VISIBLE);
         });
+        button_pick.setOnClickListener(v -> {
+            button_cancel_driver.setVisibility(View.GONE);
+            button_pick.setVisibility(View.GONE);
+        });
 
+    }
+
+    private Passenger findPassengerById(int getpId) {
+        for (int i = 0; i < pass.size(); i++) {
+            if (String.valueOf(getpId).equals(pass.get(i).getMyuIdPass())) {
+                return pass.get(i);
+            }
+        }
+        return null;
     }
 
     private Driver findDriverById(int getdId) {
@@ -246,7 +289,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             }
         }
         if (distance.get(0) == null) {
-            return 0;
+            return -1;
         }
         Collections.sort(distance);
         return Integer.parseInt(distaceForDriver.get(distance.get(0)).getMyuIdCab());
@@ -272,11 +315,13 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     private void findViews() {
         break_driver = findViewById(R.id.break_driver);
         break_return = findViewById(R.id.break_return);
+        button_pick = findViewById(R.id.button_pick);
         button_cancel_driver = findViewById(R.id.button_cancel_driver);
         button_search = findViewById(R.id.button_search);
         button_cancel = findViewById(R.id.button_cancel);
         lottie_marker = findViewById(R.id.lottie_marker);
         break_return.setVisibility(View.GONE);
+        button_pick.setVisibility(View.GONE);
         if (type.equals("driver")) {
             button_search.setVisibility(View.GONE);
             button_cancel.setVisibility(View.GONE);

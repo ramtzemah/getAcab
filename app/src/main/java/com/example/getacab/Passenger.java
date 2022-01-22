@@ -11,11 +11,11 @@ public class Passenger {
     private static int NextuIdPass = 0;
     private int myuIdPass;
 //    private static int uIdPass = 0;
-    public String name;
-    public boolean searchForCab = true;
-    public LocationNow locationNow;
-    public String phoneNumber;
-    public int dId;
+    private String name;
+    private boolean searchForCab = true;
+    private LocationNow locationNow;
+    private String phoneNumber;
+    private int dId;
 
     public Passenger() {
     }
@@ -25,7 +25,7 @@ public class Passenger {
         locationNow = new LocationNow();
         this.phoneNumber=phoneNumber;
         myuIdPass = NextuIdPass++;
-        dId = 0;
+        dId = -1;
         // uIdPass=uIdPass+1;
     }
 
