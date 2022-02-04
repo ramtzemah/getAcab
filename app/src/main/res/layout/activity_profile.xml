@@ -83,6 +83,7 @@
             android:layout_marginTop="40dp"
             android:backgroundTint="@color/yellow"
             android:buttonTint="@color/yellow"
+            app:rippleColor="@color/yellowWhite"
             android:text="Submit" />
 
 

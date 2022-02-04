@@ -50,6 +50,7 @@
             android:layout_marginTop="40dp"
             android:backgroundTint="@color/yellow"
             android:buttonTint="@color/yellow"
+            app:rippleColor="@color/yellowWhite"
             android:text="Submit" />
 
         <com.airbnb.lottie.LottieAnimationView
@@ -60,7 +61,7 @@
             android:scaleType="fitCenter"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/wait_marker"
+            app:lottie_rawRes="@raw/jump_blue_point"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
             app:lottie_speed="1.2"

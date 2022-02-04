@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
-public class ProfileActivity extends AppCompatActivity {
+public class    ProfileActivity extends AppCompatActivity {
     public static final String PHONENUMBER = "PHONENUMBER";
     public static final String PASSNEGERS = "passengers";
     public static final String CABS = "cabs";
@@ -23,6 +23,9 @@ public class ProfileActivity extends AppCompatActivity {
     private CheckBox driver;
     private MaterialButton form_BTN_submit;
     private String phoneNunber;
+    private  DatabaseReference myRefPass;
+    private DatabaseReference myRefCab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +33,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         findviews();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRefPass = database.getReference(PASSNEGERS);
-        DatabaseReference myRefCab = database.getReference(CABS);
+        myRefPass = database.getReference(PASSNEGERS);
+        myRefCab = database.getReference(CABS);
         Bundle extras = getIntent().getBundleExtra("Bundle");
         if (extras != null) {
             phoneNunber = extras.getString(PHONENUMBER);
@@ -42,12 +45,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (!js.isEmpty()) {
             undefined = new Gson().fromJson(js, Undefined.class);
             if(undefined.getType().equals("driver")){
-                Driver d = new Driver(undefined.getName(),undefined.getPhoneNumber());
+                Driver d = new Driver(undefined.getName(),undefined.getPhoneNumber(),Integer.parseInt(undefined.getId()));
                 myRefCab.child(d.getMyuIdCab()).setValue(d);
                 Main main = new Main(ProfileActivity.this,"driver",d.getMyuIdCab());
                 finish();
             }else{
-                Passenger p = new Passenger(undefined.getName(),undefined.getPhoneNumber());
+                Passenger p = new Passenger(undefined.getName(),undefined.getPhoneNumber(),Integer.parseInt(undefined.getId()));
                 myRefPass.child(p.getMyuIdPass()).setValue(p);
                 Main main = new Main(ProfileActivity.this,"passenger",p.getMyuIdPass());
                 finish();
@@ -90,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Undefined undefined;
                 if(driver.isChecked()){
                     Driver driver = new Driver(nameOfUser,phoneNunber);
-                    undefined = new Undefined("driver",nameOfUser,phoneNunber);
+                    undefined = new Undefined("driver",nameOfUser,phoneNunber,driver.getMyuIdCab());
                     myRefCab.child(driver.getMyuIdCab()).setValue(driver);
                     String json = new Gson().toJson(undefined);
                     MSPV.getMe().putString("type", json);
@@ -98,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
                     finish();
                 }else {
                     Passenger passenger = new Passenger(nameOfUser,phoneNunber);
-                    undefined = new Undefined("passenger",nameOfUser,phoneNunber);
+                    undefined = new Undefined("passenger",nameOfUser,phoneNunber,passenger.getMyuIdPass());
                     myRefPass.child(passenger.getMyuIdPass()).setValue(passenger);
                     String json = new Gson().toJson(undefined);
                     MSPV.getMe().putString("type", json);

@@ -94,7 +94,6 @@ public class Fragment_Map extends Fragment {
 //        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
 //                latLng,10
 //        ));
-        mMap.addMarker(markerOptions);
     }
 
     public void setOnMapCabs(ArrayList<Driver> cabs) {
@@ -139,8 +138,31 @@ public class Fragment_Map extends Fragment {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng,16
         ));
-
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.businessman));
+        mMap.addMarker(markerOptions);
     }
 
 
+    public void setOnMapcab(ArrayList<Driver> cabs, int dId) {
+        mMap.clear();
+        ArrayList<MarkerOptions> markerOptionscabs = new ArrayList<>(cabs.size());
+        for (int i = 0; i < cabs.size() ; i++) {
+            LatLng latLng = new LatLng(Double.parseDouble(cabs.get(i).getLocationNow().getLatitude()),Double.parseDouble(cabs.get(i).getLocationNow().getLongitude()));
+            markerOptionscabs.add(new MarkerOptions());
+            markerOptionscabs.get(i).position(latLng);
+            markerOptionscabs.get(i).title(cabs.get(i).getName());
+            if (cabs.get(i).isAvailable() == true) {
+                markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.cab));
+            }else{
+                if(cabs.get(i).getMyuIdCab()==String.valueOf(dId)){
+                    markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.catch_by_me));
+                }else{
+                    markerOptionscabs.get(i).icon(BitmapDescriptorFactory.fromResource(R.drawable.catch_taxi));
+                }
+            }
+            mMap.addMarker(markerOptionscabs.get(i));
+        }
+    }
 }

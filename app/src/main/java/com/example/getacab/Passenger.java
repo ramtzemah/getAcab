@@ -16,6 +16,7 @@ public class Passenger {
     private LocationNow locationNow;
     private String phoneNumber;
     private int dId;
+    private boolean picked =false;
 
     public Passenger() {
     }
@@ -26,7 +27,14 @@ public class Passenger {
         this.phoneNumber=phoneNumber;
         myuIdPass = NextuIdPass++;
         dId = -1;
-        // uIdPass=uIdPass+1;
+    }
+
+    public Passenger(String name, String phoneNumber, int id) {
+        this.name = name;
+        locationNow = new LocationNow();
+        this.phoneNumber=phoneNumber;
+        myuIdPass = id;
+        dId = -1;
     }
 
     public Passenger(Passenger p) {
@@ -36,6 +44,7 @@ public class Passenger {
         this.myuIdPass = p.myuIdPass;
         this.locationNow = new LocationNow(p.locationNow);
         this.dId = p.dId;
+        this.picked = p.picked;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -103,6 +112,14 @@ public class Passenger {
 
     public void setdId(int dId) {
         this.dId = dId;
+    }
+
+    public boolean isPicked() {
+        return picked;
+    }
+
+    public void setPicked(boolean picked) {
+        this.picked = picked;
     }
 
     //    public Driver getD() {

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class MSPV {
 
-    private final String SP_FILE = "SP_FILE1";
+    private final String SP_FILE = "SP_FILE00";
     //2 is driver 1 is pass
 
 

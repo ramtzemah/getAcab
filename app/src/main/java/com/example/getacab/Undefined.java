@@ -4,11 +4,13 @@ public class Undefined {
     private String type;
     private String name;
     private String phoneNumber;
+    private String id;
 
-    public Undefined(String type, String name, String phoneNumber) {
+    public Undefined(String type, String name, String phoneNumber,String id) {
         this.type = type;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.id = id;
     }
 
     public String getType() {
@@ -21,5 +23,9 @@ public class Undefined {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getId() {
+        return id;
     }
 }

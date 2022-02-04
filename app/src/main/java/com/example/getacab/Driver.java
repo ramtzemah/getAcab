@@ -15,6 +15,7 @@ public class Driver {
     private boolean available = true;
     private String phoneNumber;
     private int pId;
+    private boolean pick = false;
 
     public Driver() {
     }
@@ -24,6 +25,14 @@ public class Driver {
         this.phoneNumber = phoneNumber;
         locationNow = new LocationNow();
         myuIdCab = NextuIdCab++;
+        pId = -1;
+    }
+
+    public Driver(String name,String phoneNumber,int id) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        locationNow = new LocationNow();
+        myuIdCab = id;
         pId = -1;
     }
 
@@ -110,5 +119,13 @@ public class Driver {
 
     public void setMyuIdCab(String myuIdCab) {
         this.myuIdCab = Integer.parseInt(myuIdCab);
+    }
+
+    public boolean isPick() {
+        return pick;
+    }
+
+    public void setPick(boolean pick) {
+        this.pick = pick;
     }
 }

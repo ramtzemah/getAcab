@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -77,12 +79,26 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
     private MaterialButton break_driver;
     private MaterialButton break_return;
     private MaterialButton button_pick;
+    private MaterialButton button_take_drive;
     private MaterialButton button_cancel_driver;
     private MaterialButton button_search;
     private MaterialButton button_cancel;
+    private MaterialButton button_stop_driver;
     private DatabaseReference myRefPass;
     private DatabaseReference myRefCab;
     private LottieAnimationView lottie_marker;
+    private TextView map;
+    private TextView hours;
+    private TextView min;
+    private TextView sec;
+    private TextView cost;
+    private int helper = 0;
+    private int secend = 0;
+    private int minute = 0;
+    private int hour = 0;
+    private double costText = 0;
+    private int pickDriver = 0;
+    private int pickPass = 0;
 
     private BroadcastReceiver fileBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -150,8 +166,19 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
                     findPassenger();
                 }
                 if (counter == 1) {
-                    fragmentMap.setOnMapCabs(cabs);
-                    fragmentMap.setOnMap(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
+                    if(p!=null){
+                        fragmentMap.setOnMap(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
+                        if(p.getdId()!=-1){
+                            Driver temp = findDriverById(p.getdId());
+                            fragmentMap.setOnMapcab(cabs,p.getdId());
+                        }else{
+                            fragmentMap.setOnMapCabs(cabs);
+                        }
+                        fragmentMap.myPosition(p.getLocationNow().getLatitude(), p.getLocationNow().getLongitude());
+                    }
+//                    else{
+//                        fragmentMap.setOnMapCabs(cabs);
+//                    }
                 }
             }
         };
@@ -168,8 +195,18 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
                     findDriver();
                 }
                 if (counter == 1) {
-                    fragmentMap.setOnMapCabs(cabs);
-                    fragmentMap.setOnMapPass(pass);
+                    if(d!=null){
+                        if (d.getpId()==-1) {
+                            fragmentMap.setOnMapPass(pass);
+                        }else{
+                            Passenger temp = findPassengerById(d.getpId());
+                            fragmentMap.setOnMap(temp.getLocationNow().getLatitude(),temp.getLocationNow().getLongitude());
+                        }
+                        fragmentMap.setOnMapCabs(cabs);
+                    }
+//                    else{
+//                        fragmentMap.setOnMapPass(pass);
+//                    }
                 }
             }
         };
@@ -196,40 +233,89 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(ts = new TimerTask() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void run() {
                 runOnUiThread(() -> {
-                    if(type.equals("driver") && d!=null){
+                    helper++;
+                    if(type.equals("driver") && d!=null && pickDriver==0){
                         if(d.getpId()!=-1){
                             button_pick.setVisibility(View.VISIBLE);
                             break_driver.setVisibility(View.GONE);
+                            if(helper%2==1){
+                                button_pick.setBackgroundTintList(ContextCompat.getColorStateList(ThePick.this, R.color.yellow));
+                            }else{
+                                button_pick.setBackgroundTintList(ContextCompat.getColorStateList(ThePick.this, R.color.yellowWhite));
+                            }
+                        }else{
+                            button_pick.setVisibility(View.GONE);
+                            if(d.isAvailable()){
+                                break_driver.setVisibility(View.VISIBLE);
+                            }
                         }
+                    }else if (type.equals("passenger") && p!=null){
+                        if(p.isPicked()){
+                            if (pickPass == 0) {
+                                sec.setText("00");
+                                min.setText("00:");
+                                hours.setText("00:");
+                                secend=0;
+                                minute=0;
+                                hour=0;
+                                costText=0;
+                                cost.setText("0.0$");
+                                pickPass++;
+                            }
+                            hours.setVisibility(View.VISIBLE);
+                            min.setVisibility(View.VISIBLE);
+                            sec.setVisibility(View.VISIBLE);
+                            cost.setVisibility(View.VISIBLE);
+                            button_cancel.setVisibility(View.GONE);
+                            button_search.setVisibility(View.GONE);
+                        }else{
+                            hours.setVisibility(View.GONE);
+                            min.setVisibility(View.GONE);
+                            sec.setVisibility(View.GONE);
+                            cost.setVisibility(View.GONE);
+                            button_cancel.setVisibility(View.VISIBLE);
+                            button_search.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    if(helper == 2) {
+                        helper = 0;
+                        runClock();
                     }
                 });
             }
         }, 0, 500);
 
         button_search.setOnClickListener(v -> {
-           p.setdId(minimumDistance());
-            if (p.getdId() != -1) {
-                Driver temp = findDriverById(p.getdId());
-                temp.setAvailable(false);
-                temp.setpId(Integer.parseInt(p.getMyuIdPass()));
-                myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
-                p.setSearchForCab(false);
-            }
-            else{
-                Toast.makeText(this,"sorry, there is no available cab" , Toast.LENGTH_SHORT).show();
+            pickPass = 0;
+            if(p!=null){
+                p.setdId(minimumDistance());
+                if (p.getdId() != -1) {
+                    Driver temp = findDriverById(p.getdId());
+                    temp.setAvailable(false);
+                    temp.setpId(Integer.parseInt(p.getMyuIdPass()));
+                    myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
+                    p.setSearchForCab(false);
+                    myRefPass.child(p.getMyuIdPass()).setValue(p);
+                }
+                else{
+                    Toast.makeText(this,"sorry, there is no available cab" , Toast.LENGTH_SHORT).show();
+                }
             }
         });
         button_cancel.setOnClickListener(v -> {
-            if (p.getdId() != -1) {
                 Driver temp = findDriverById(p.getdId());
                 temp.setAvailable(true);
                 temp.setpId(-1);
+                temp.setPick(false);
                 myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
                 p.setSearchForCab(true);
-            }
+                p.setdId(-1);
+                p.setPicked(false);
+                myRefPass.child(p.getMyuIdPass()).setValue(p);
         });
         break_driver.setOnClickListener(v -> {
             d.setAvailable(false);
@@ -237,27 +323,104 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
             break_driver.setVisibility(View.GONE);
         });
         button_cancel_driver.setOnClickListener(v -> {
-            if(p.getdId()!=-1) {
+            if(d.getpId()!=-1) {
                 Passenger temp = findPassengerById(d.getpId());
                 temp.setSearchForCab(true);
                 temp.setdId(-1);
+                temp.setPicked(false);
                 myRefPass.child(p.getMyuIdPass()).setValue(temp);
                 d.setAvailable(true);
+                d.setpId(-1);
+                d.setPick(false);
+                myRefCab.child(d.getMyuIdCab()).setValue(d);
                 button_pick.setVisibility(View.GONE);
                 break_driver.setVisibility(View.VISIBLE);
             }
-
         });
         break_return.setOnClickListener(v -> {
             d.setAvailable(true);
             break_return.setVisibility(View.GONE);
             break_driver.setVisibility(View.VISIBLE);
         });
+        button_take_drive.setOnClickListener(v -> {
+
+        });
         button_pick.setOnClickListener(v -> {
+            hours.setVisibility(View.VISIBLE);
+            min.setVisibility(View.VISIBLE);
+            sec.setVisibility(View.VISIBLE);
+            cost.setVisibility(View.VISIBLE);
+            button_stop_driver.setVisibility(View.VISIBLE);
             button_cancel_driver.setVisibility(View.GONE);
+            sec.setText("00");
+            min.setText("00:");
+            hours.setText("00:");
+            secend=0;
+            minute=0;
+            hour=0;
+            costText=0;
+            cost.setText("2.5$");
+            Passenger temp = findPassengerById(d.getpId());
+            temp.setPicked(true);
+            temp.setdId(Integer.parseInt(d.getMyuIdCab()));
+            temp.setSearchForCab(false);
+            myRefPass.child(temp.getMyuIdPass()).setValue(temp);
             button_pick.setVisibility(View.GONE);
+            pickDriver = 1;
+            d.setPick(true);
+            myRefCab.child(d.getMyuIdCab()).setValue(d);
+        });
+        button_stop_driver.setOnClickListener(v -> {
+            button_cancel_driver.setVisibility(View.VISIBLE);
+            break_driver.setVisibility(View.VISIBLE);
+            hours.setVisibility(View.GONE);
+            min.setVisibility(View.GONE);
+            sec.setVisibility(View.GONE);
+            button_stop_driver.setVisibility(View.GONE);
+            cost.setVisibility(View.GONE);
+            Passenger temp = findPassengerById(d.getpId());
+            temp.setPicked(false);
+            temp.setdId(-1);
+            temp.setSearchForCab(true);
+            myRefPass.child(temp.getMyuIdPass()).setValue(temp);
+            pickDriver = 0;
+            d.setAvailable(true);
+            d.setpId(-1);
+            d.setPick(false);
+            myRefCab.child(d.getMyuIdCab()).setValue(d);
         });
 
+
+    }
+
+    private void runClock() {
+        secend++;
+        secend=secend%60;
+        if(secend%60 == 30 || secend%60 == 0){
+            costText = costText +0.4;
+            cost.setText(""+String.format("%,.1f", costText)+"$");
+        }
+        if(secend==0){
+            minute++;
+            minute = minute%60;
+            if (minute == 0) {
+                hour++;
+            }
+        }
+        if(secend<10){
+            sec.setText("0"+secend);
+        }else{
+            sec.setText(""+secend);
+        }
+        if(minute<10){
+            min.setText("0"+minute+":");
+        }else{
+            min.setText(""+minute+":");
+        }if(hour<10){
+            hours.setText("0"+hour+":");
+        }else{
+            hours.setText(""+hour+":");
+        }
     }
 
     private Passenger findPassengerById(int getpId) {
@@ -288,7 +451,7 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
                 distaceForDriver.put(dista, cabs.get(i));
             }
         }
-        if (distance.get(0) == null) {
+        if (distance.isEmpty()) {
             return -1;
         }
         Collections.sort(distance);
@@ -313,15 +476,27 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
 
     @SuppressLint("WrongViewCast")
     private void findViews() {
+        button_stop_driver =findViewById(R.id.button_stop_driver);
+        hours = findViewById(R.id.hours);
+        min = findViewById(R.id.min);
+        sec = findViewById(R.id.sec);
+        cost = findViewById(R.id.cost);
         break_driver = findViewById(R.id.break_driver);
         break_return = findViewById(R.id.break_return);
         button_pick = findViewById(R.id.button_pick);
+        button_take_drive = findViewById(R.id.button_take_drive);
         button_cancel_driver = findViewById(R.id.button_cancel_driver);
         button_search = findViewById(R.id.button_search);
         button_cancel = findViewById(R.id.button_cancel);
         lottie_marker = findViewById(R.id.lottie_marker);
         break_return.setVisibility(View.GONE);
         button_pick.setVisibility(View.GONE);
+        button_take_drive.setVisibility(View.GONE);
+        button_stop_driver.setVisibility(View.GONE);
+        hours.setVisibility(View.GONE);
+        min.setVisibility(View.GONE);
+        sec.setVisibility(View.GONE);
+        cost.setVisibility(View.GONE);
         if (type.equals("driver")) {
             button_search.setVisibility(View.GONE);
             button_cancel.setVisibility(View.GONE);
@@ -366,17 +541,86 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(fileBroadcastReceiver,
                 new IntentFilter(GPS_Service.ACTION_BROADCAST));
+        if(type.equals("driver")){
+            if(d!=null)
+            myRefCab.child(d.getMyuIdCab()).setValue(d);
+        }else if (p!=null){
+            myRefPass.child(p.getMyuIdPass()).setValue(p);
+        }
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         if (mBound) {
             unbindService(mServiceConnection);
             mBound = false;
         }
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
-        super.onStop();
+        if(type.equals("driver")){
+            if(d.getpId()!=-1){
+                Passenger temp = findPassengerById(d.getpId());
+                temp.setPicked(false);
+                temp.setSearchForCab(true);
+                temp.setdId(-1);
+                myRefPass.child(temp.getMyuIdPass()).setValue(temp);
+                pickDriver = 0;
+            }
+            d.setAvailable(true);
+            d.setpId(-1);
+            d.setPick(false);
+            myRefCab.child(d.getMyuIdCab()).setValue(d);
+            myRefCab.child(d.getMyuIdCab()).removeValue();
+        }else{
+            if(p.getdId()!=-1){
+                Driver temp = findDriverById(p.getdId());
+                temp.setAvailable(true);
+                temp.setpId(-1);
+                temp.setPick(false);
+                myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
+            }
+            p.setSearchForCab(true);
+            p.setdId(-1);
+            p.setPicked(false);
+            myRefPass.child(p.getMyuIdPass()).setValue(p);
+            myRefPass.child(p.getMyuIdPass()).removeValue();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(type.equals("driver")){
+            if(d!=null){
+            if(d.getpId()!=-1){
+                Passenger temp = findPassengerById(d.getpId());
+                temp.setPicked(false);
+                temp.setSearchForCab(true);
+                temp.setdId(-1);
+                myRefPass.child(temp.getMyuIdPass()).setValue(temp);
+                pickDriver = 0;
+            }
+            d.setAvailable(true);
+            d.setpId(-1);
+            d.setPick(false);
+            myRefCab.child(d.getMyuIdCab()).setValue(d);
+            myRefCab.child(d.getMyuIdCab()).removeValue();
+            }
+        }else if ( p!=null) {
+            if(p.getdId()!=-1){
+                Driver temp = findDriverById(p.getdId());
+                temp.setAvailable(true);
+                temp.setpId(-1);
+                temp.setPick(false);
+                myRefCab.child(String.valueOf(p.getdId())).setValue(temp);
+            }
+            p.setSearchForCab(true);
+            p.setdId(-1);
+            p.setPicked(false);
+            myRefPass.child(p.getMyuIdPass()).setValue(p);
+            myRefPass.child(p.getMyuIdPass()).removeValue();
+        }
     }
 
     private boolean checkPermissions() {
@@ -405,15 +649,13 @@ public class ThePick extends AppCompatActivity implements SharedPreferences.OnSh
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //TODO
                 mService.requestLocationUpdates();
             }
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
