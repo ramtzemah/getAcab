@@ -5,15 +5,25 @@
       <map>
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/drawable/border.xml" value="0.25" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/drawable/rounded.xml" value="0.1140625" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_history.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_history2.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_maps2.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_profile.xml" value="0.18" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_start.xml" value="0.1328125" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/activity_verify_phone_number.xml" value="0.25" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/app_bar_main.xml" value="0.13269927536231885" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/content_main.xml" value="0.13269927536231885" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/fragment_list.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/frgment_list.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/list_drive.xml" value="0.33" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/list_record.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/nav_header_main.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/pickPage.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/pick_page.xml" value="0.25" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/layout/your_rounded_shape.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
         <entry key="..\:/Users/user/AndroidStudioProjects/getAcab/app/src/main/res/mipmap-anydpi-v26/getAcab_launcher.xml" value="0.19479166666666667" />
       </map>
     </option>

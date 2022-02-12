@@ -9,38 +9,41 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Driver {
     private static int NextuIdCab = 1;
-    private int myuIdCab;
+    private String myuIdCab;
     private String name;
     private  LocationNow locationNow;
     private boolean available = true;
     private String phoneNumber;
-    private int pId;
+    private String pId;
     private boolean pick = false;
+    private boolean takeInvite = false;
 
     public Driver() {
     }
 
     public Driver(String name,String phoneNumber) {
         this.name = name;
+        phoneNumber = "0509219909";
         this.phoneNumber = phoneNumber;
         locationNow = new LocationNow();
-        myuIdCab = NextuIdCab++;
-        pId = -1;
+        myuIdCab = phoneNumber;
+        pId = "-1";
     }
 
-    public Driver(String name,String phoneNumber,int id) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        locationNow = new LocationNow();
-        myuIdCab = id;
-        pId = -1;
-    }
+//    public Driver(String name,String phoneNumber) {
+//        this.name = name;
+//        this.phoneNumber = phoneNumber;
+////        locationNow = new LocationNow();
+//        myuIdCab = phoneNumber;
+//        pId = -1;
+//    }
 
     public Driver(Driver d) {
-        this.name = d.name;
-        this.phoneNumber = d.phoneNumber;
-        this.available = d.available;
-        this.myuIdCab = d.myuIdCab;
+        this.name = d.getName();
+        this.phoneNumber = d.getPhoneNumber();
+       // this.phoneNumber = "0509219009";
+        this.available = d.isAvailable();
+        this.myuIdCab = d.getMyuIdCab();
         this.locationNow = new LocationNow(d.locationNow);
         this.pId = d.pId;
     }
@@ -65,11 +68,11 @@ public class Driver {
         myRef.child(phoneNumber).setValue(this);
     }
 
-    public int getpId() {
+    public String getpId() {
         return pId;
     }
 
-    public void setpId(int pId) {
+    public void setpId(String pId) {
         this.pId = pId;
     }
 
@@ -114,11 +117,11 @@ public class Driver {
     }
 
     public String getMyuIdCab() {
-        return String.valueOf(myuIdCab);
+        return myuIdCab;
     }
 
     public void setMyuIdCab(String myuIdCab) {
-        this.myuIdCab = Integer.parseInt(myuIdCab);
+        this.myuIdCab = myuIdCab;
     }
 
     public boolean isPick() {
@@ -127,5 +130,13 @@ public class Driver {
 
     public void setPick(boolean pick) {
         this.pick = pick;
+    }
+
+    public boolean isTakeInvite() {
+        return takeInvite;
+    }
+
+    public void setTakeInvite(boolean takeInvite) {
+        this.takeInvite = takeInvite;
     }
 }

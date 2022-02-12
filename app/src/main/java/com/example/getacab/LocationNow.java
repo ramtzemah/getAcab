@@ -14,7 +14,7 @@ public class LocationNow {
 //    }
 //
     public LocationNow() {
-        this.latitude = "32.2857056";
+        this.latitude = "32.2859056";
         this.longitude = "34.8441235";
     }
 

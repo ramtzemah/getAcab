@@ -45,12 +45,12 @@ public class    ProfileActivity extends AppCompatActivity {
         if (!js.isEmpty()) {
             undefined = new Gson().fromJson(js, Undefined.class);
             if(undefined.getType().equals("driver")){
-                Driver d = new Driver(undefined.getName(),undefined.getPhoneNumber(),Integer.parseInt(undefined.getId()));
+                Driver d = new Driver(undefined.getName(),undefined.getPhoneNumber());
                 myRefCab.child(d.getMyuIdCab()).setValue(d);
                 Main main = new Main(ProfileActivity.this,"driver",d.getMyuIdCab());
                 finish();
             }else{
-                Passenger p = new Passenger(undefined.getName(),undefined.getPhoneNumber(),Integer.parseInt(undefined.getId()));
+                Passenger p = new Passenger(undefined.getName(),undefined.getPhoneNumber());
                 myRefPass.child(p.getMyuIdPass()).setValue(p);
                 Main main = new Main(ProfileActivity.this,"passenger",p.getMyuIdPass());
                 finish();

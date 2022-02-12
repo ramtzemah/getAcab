@@ -8,14 +8,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Passenger {
-    private static int NextuIdPass = 0;
-    private int myuIdPass;
+ //   private static int NextuIdPass = 0;
+    private String myuIdPass;
 //    private static int uIdPass = 0;
     private String name;
     private boolean searchForCab = true;
     private LocationNow locationNow;
     private String phoneNumber;
-    private int dId;
+    private String dId;
     private boolean picked =false;
 
     public Passenger() {
@@ -24,22 +24,25 @@ public class Passenger {
     public Passenger(String name, String phoneNumber) {
         this.name = name;
         locationNow = new LocationNow();
+        phoneNumber = "0509219009";
         this.phoneNumber=phoneNumber;
-        myuIdPass = NextuIdPass++;
-        dId = -1;
+        myuIdPass = phoneNumber;
+        dId = "-1";
     }
 
-    public Passenger(String name, String phoneNumber, int id) {
-        this.name = name;
-        locationNow = new LocationNow();
-        this.phoneNumber=phoneNumber;
-        myuIdPass = id;
-        dId = -1;
-    }
+//    public Passenger(String name, String phoneNumber) {
+//        this.name = name;
+//        locationNow = new LocationNow();
+//        this.phoneNumber=phoneNumber;
+//        //this.phoneNumber = "0509219009";
+//        myuIdPass = id;
+//        dId = "-1";
+//    }
 
     public Passenger(Passenger p) {
         this.name = p.name;
         this.phoneNumber = p.phoneNumber;
+        //this.phoneNumber = "0509219009";
         this.searchForCab = p.searchForCab;
         this.myuIdPass = p.myuIdPass;
         this.locationNow = new LocationNow(p.locationNow);
@@ -103,14 +106,14 @@ public class Passenger {
     }
 
     public void setMyuIdPass(String myuIdPass) {
-        this.myuIdPass = Integer.parseInt(myuIdPass);
+        this.myuIdPass = myuIdPass;
     }
 
-    public int getdId() {
+    public String getdId() {
         return dId;
     }
 
-    public void setdId(int dId) {
+    public void setdId(String dId) {
         this.dId = dId;
     }
 

@@ -53,7 +53,7 @@ public class VerifyPhoneNumber extends AppCompatActivity {
         number = phoneNumber;
         String perfix = "+972";
 
-        sendVerfiyPhoneNumber(perfix+number);
+        sendVerfiyPhoneNumber(perfix+number.substring(1));
         form_BTN_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
